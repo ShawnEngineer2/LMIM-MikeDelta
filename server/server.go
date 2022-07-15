@@ -30,7 +30,7 @@ func InitAPIServer() {
 	geoDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "geo.",
-			SingularTable: false,
+			SingularTable: true,
 		},
 	})
 
@@ -50,6 +50,10 @@ func InitAPIServer() {
 
 	geo_group.Get("/GetCountry", func(c *fiber.Ctx) error {
 		return c.SendString("Not Implemented")
+	})
+
+	geo_group.Post("/CreateCountry", func(c *fiber.Ctx) error {
+		return c.SendString(geoservice.CreateCountry(geoDB))
 	})
 
 	app.Listen(":3000")
