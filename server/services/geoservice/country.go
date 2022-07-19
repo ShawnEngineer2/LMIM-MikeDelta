@@ -3,6 +3,7 @@ package geoservice
 import (
 	"fmt"
 
+	"lemonde.mikedelta/server/handlers"
 	"lemonde.mikedelta/server/models/general"
 	"lemonde.mikedelta/server/models/geo"
 
@@ -20,7 +21,7 @@ func GetAllCountries(db *gorm.DB) string {
 
 	dbResult := db.Find(&reqModel)
 
-	dbError := GenericSvcErrHandler(dbResult.Error)
+	dbError := handlers.GenericSvcErrHandler(dbResult.Error)
 
 	if len(dbError) > 0 {
 		return dbError
@@ -29,7 +30,7 @@ func GetAllCountries(db *gorm.DB) string {
 	jsonResult, jsonErr := json.Marshal(reqModel)
 
 	if jsonErr != nil {
-		return GenericSvcErrHandler(jsonErr)
+		return handlers.GenericSvcErrHandler(jsonErr)
 	}
 
 	return string(jsonResult)
@@ -50,7 +51,7 @@ func GetCountryById(db *gorm.DB, c *fiber.Ctx) string {
 
 	dbResult := db.Where(map[string]interface{}{"countryid": countryId}).Find(&reqModel)
 
-	dbError := GenericSvcErrHandler(dbResult.Error)
+	dbError := handlers.GenericSvcErrHandler(dbResult.Error)
 
 	if len(dbError) > 0 {
 		return dbError
@@ -59,7 +60,7 @@ func GetCountryById(db *gorm.DB, c *fiber.Ctx) string {
 	jsonResult, jsonErr := json.Marshal(reqModel)
 
 	if jsonErr != nil {
-		return GenericSvcErrHandler(jsonErr)
+		return handlers.GenericSvcErrHandler(jsonErr)
 	}
 
 	return string(jsonResult)
@@ -75,7 +76,7 @@ func UpdateCountry(db *gorm.DB, inputData string) string {
 	fmt.Println(reqJson)
 
 	dbResult := db.Model(&reqModel).Where(fmt.Sprintf("%s = ?", reqJson.RecKeyColumn), reqJson.RecKeyValue).Update(reqJson.UpdateColumn, reqJson.UpdateColumnValue)
-	return GenericSvcErrHandler(dbResult.Error)
+	return handlers.GenericSvcErrHandler(dbResult.Error)
 
 }
 
@@ -87,7 +88,7 @@ func CreateCountry(db *gorm.DB, inputData string) string {
 	json.Unmarshal([]byte(inputData), &reqJson)
 
 	dbResult := db.Create(&reqJson)
-	return GenericSvcErrHandler(dbResult.Error)
+	return handlers.GenericSvcErrHandler(dbResult.Error)
 }
 
 func DeleteCountry(db *gorm.DB, c *fiber.Ctx) string {
@@ -104,5 +105,5 @@ func DeleteCountry(db *gorm.DB, c *fiber.Ctx) string {
 	reqModel := geo.Country{}
 
 	dbResult := db.Where("countryid = ?", countryId).Delete(&reqModel)
-	return GenericSvcErrHandler(dbResult.Error)
+	return handlers.GenericSvcErrHandler(dbResult.Error)
 }
