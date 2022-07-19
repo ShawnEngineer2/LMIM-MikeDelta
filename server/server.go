@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
@@ -45,15 +46,28 @@ func InitAPIServer() {
 	geo_group := api.Group("/Geographic")
 
 	geo_group.Get("/GetAllCountries", func(c *fiber.Ctx) error {
-		return c.SendString(geoservice.GetAllCountries(geoDB))
+		svcResult := geoservice.GetAllCountries(geoDB)
+		return GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Get("/GetCountry", func(c *fiber.Ctx) error {
-		return c.SendString("Not Implemented")
+	geo_group.Get("/GetCountryById", func(c *fiber.Ctx) error {
+		svcResult := geoservice.GetCountryById(geoDB, c)
+		return GenericSvcResultHandler(svcResult, c)
 	})
 
 	geo_group.Post("/CreateCountry", func(c *fiber.Ctx) error {
-		return c.SendString(geoservice.CreateCountry(geoDB))
+		svcResult := geoservice.CreateCountry(geoDB, string(c.Request().Body()))
+		return GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Delete("/DeleteCountry", func(c *fiber.Ctx) error {
+		svcResult := geoservice.DeleteCountry(geoDB, c)
+		return GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Put("/UpdateCountry", func(c *fiber.Ctx) error {
+		svcResult := geoservice.UpdateCountry(geoDB, string(c.Request().Body()))
+		return GenericSvcResultHandler(svcResult, c)
 	})
 
 	app.Listen(":3000")
@@ -64,4 +78,45 @@ func GenericErrorHandler(err error, msg string) {
 		errmsg := fmt.Sprintf("Error! %s: %v", msg, err.Error())
 		panic(errmsg)
 	}
+}
+
+func GenericSvcResultHandler(svcResult string, c *fiber.Ctx) error {
+
+	var statusCode int = 0
+
+	//Assign happy-path status code
+	switch c.Method() {
+	case "POST":
+		statusCode = fiber.StatusCreated
+	case "DELETE":
+		statusCode = fiber.StatusNoContent
+	case "GET":
+		statusCode = fiber.StatusOK
+	default:
+		statusCode = fiber.StatusNoContent
+	}
+
+	//Handle error content
+	if len(svcResult) > 0 {
+		var svcResultType string = "svcUnknown"
+
+		//Error occurred - identify and handle
+		if strings.HasPrefix(svcResult, "Parameter Not Found:") {
+			svcResultType = "reqError"
+			statusCode = fiber.StatusBadRequest
+		} else if strings.HasPrefix(svcResult, "ERROR:") {
+			svcResultType = "svcError"
+			statusCode = fiber.StatusInternalServerError
+		} else {
+			svcResultType = "svcData"
+			statusCode = fiber.StatusOK
+		}
+
+		return c.Status(statusCode).JSON(fiber.Map{
+			svcResultType: svcResult,
+		})
+	}
+
+	return c.SendStatus(statusCode)
+
 }
