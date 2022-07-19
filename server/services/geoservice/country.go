@@ -36,7 +36,7 @@ func GetAllCountries(db *gorm.DB) string {
 	return string(jsonResult)
 }
 
-func GetCountryById(db *gorm.DB, c *fiber.Ctx) string {
+func GetCountryForId(db *gorm.DB, c *fiber.Ctx) string {
 
 	parmName := "countryid"
 	countryId, _ := strconv.Atoi(c.Query(parmName, "-1"))
@@ -70,10 +70,8 @@ func GetCountryById(db *gorm.DB, c *fiber.Ctx) string {
 func UpdateCountry(db *gorm.DB, inputData string) string {
 
 	reqModel := geo.Country{}
-	reqJson := general.DataGram{}
+	reqJson := general.DataGram01{}
 	json.Unmarshal([]byte(inputData), &reqJson)
-
-	fmt.Println(reqJson)
 
 	dbResult := db.Model(&reqModel).Where(fmt.Sprintf("%s = ?", reqJson.RecKeyColumn), reqJson.RecKeyValue).Update(reqJson.UpdateColumn, reqJson.UpdateColumnValue)
 	return handlers.GenericSvcErrHandler(dbResult.Error)

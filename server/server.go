@@ -50,8 +50,8 @@ func InitAPIServer() {
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Get("/GetCountryById", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetCountryById(geoDB, c)
+	geo_group.Get("/GetCountryForId", func(c *fiber.Ctx) error {
+		svcResult := geoservice.GetCountryForId(geoDB, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
@@ -66,6 +66,31 @@ func InitAPIServer() {
 	})
 
 	geo_group.Put("/UpdateCountry", func(c *fiber.Ctx) error {
+		svcResult := geoservice.UpdateCountry(geoDB, string(c.Request().Body()))
+		return handlers.GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Get("/GetAllStatesForCountryId", func(c *fiber.Ctx) error {
+		svcResult := geoservice.GetAllCountries(geoDB)
+		return handlers.GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Get("/GetStateForId", func(c *fiber.Ctx) error {
+		svcResult := geoservice.GetCountryForId(geoDB, c)
+		return handlers.GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Post("/CreateState", func(c *fiber.Ctx) error {
+		svcResult := geoservice.CreateCountry(geoDB, string(c.Request().Body()))
+		return handlers.GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Delete("/DeleteState", func(c *fiber.Ctx) error {
+		svcResult := geoservice.DeleteCountry(geoDB, c)
+		return handlers.GenericSvcResultHandler(svcResult, c)
+	})
+
+	geo_group.Put("/UpdateState", func(c *fiber.Ctx) error {
 		svcResult := geoservice.UpdateCountry(geoDB, string(c.Request().Body()))
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
