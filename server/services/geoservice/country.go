@@ -106,11 +106,3 @@ func DeleteCountry(db *gorm.DB, c *fiber.Ctx) string {
 	dbResult := db.Where("countryid = ?", countryId).Delete(&reqModel)
 	return GenericSvcErrHandler(dbResult.Error)
 }
-
-func GenericSvcErrHandler(newErr error) string {
-	if newErr != nil {
-		return newErr.Error()
-	} else {
-		return ""
-	}
-}
