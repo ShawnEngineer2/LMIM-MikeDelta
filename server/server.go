@@ -29,9 +29,10 @@ func InitAPIServer() {
 
 	app := fiber.New()
 	api := app.Group("/MikeDelta/api")
+	geo_group := api.Group("/Geographic")
 
-	georoute.SetCountryRouting(api, geoDB, "/Geographic")
-	georoute.SetStateRouting(api, geoDB, "/Geographic")
+	georoute.SetCountryRouting(geo_group, geoDB)
+	georoute.SetStateRouting(geo_group, geoDB)
 
 	app.Listen(":3000")
 }

@@ -100,6 +100,7 @@ func CreateState(db *gorm.DB, inputData string) string {
 
 	//Try to read the incoming JSON into a State struct instance
 	//---------------------------------------------------------------
+	fmt.Println("Boom")
 	reqJson := geo.State{}
 	json.Unmarshal([]byte(inputData), &reqJson)
 

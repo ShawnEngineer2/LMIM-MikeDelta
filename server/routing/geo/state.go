@@ -8,31 +8,29 @@ import (
 	"lemonde.mikedelta/server/services/geoservice"
 )
 
-func SetStateRouting(rtr fiber.Router, db *gorm.DB, apiGroupName string) fiber.Router {
+func SetStateRouting(rtr fiber.Router, db *gorm.DB) fiber.Router {
 
-	geo_group := rtr.Group(apiGroupName)
-
-	geo_group.Get("/GetAllStatesForCountryId", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetAllCountries(db)
+	rtr.Get("/GetAllStatesForCountryId", func(c *fiber.Ctx) error {
+		svcResult := geoservice.GetAllStatesForCountryId(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Get("/GetStateForId", func(c *fiber.Ctx) error {
+	rtr.Get("/GetStateForId", func(c *fiber.Ctx) error {
 		svcResult := geoservice.GetCountryForId(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Post("/CreateState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.CreateCountry(db, string(c.Request().Body()))
+	rtr.Post("/CreateState", func(c *fiber.Ctx) error {
+		svcResult := geoservice.CreateState(db, string(c.Request().Body()))
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Delete("/DeleteState", func(c *fiber.Ctx) error {
+	rtr.Delete("/DeleteState", func(c *fiber.Ctx) error {
 		svcResult := geoservice.DeleteCountry(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
-	geo_group.Put("/UpdateState", func(c *fiber.Ctx) error {
+	rtr.Put("/UpdateState", func(c *fiber.Ctx) error {
 		svcResult := geoservice.UpdateCountry(db, string(c.Request().Body()))
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
