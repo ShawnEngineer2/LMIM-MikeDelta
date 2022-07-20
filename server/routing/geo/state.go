@@ -16,7 +16,7 @@ func SetStateRouting(rtr fiber.Router, db *gorm.DB) fiber.Router {
 	})
 
 	rtr.Get("/GetStateForId", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetCountryForId(db, c)
+		svcResult := geoservice.GetStateForCountryStateId(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
@@ -26,12 +26,12 @@ func SetStateRouting(rtr fiber.Router, db *gorm.DB) fiber.Router {
 	})
 
 	rtr.Delete("/DeleteState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.DeleteCountry(db, c)
+		svcResult := geoservice.DeleteState(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
 	rtr.Put("/UpdateState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.UpdateCountry(db, string(c.Request().Body()))
+		svcResult := geoservice.UpdateState(db, string(c.Request().Body()))
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})
 
