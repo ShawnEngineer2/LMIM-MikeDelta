@@ -4,16 +4,10 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 
 	"lemonde.mikedelta/server/handlers"
-	"lemonde.mikedelta/server/services/geoservice"
+	georoute "lemonde.mikedelta/server/routing/geo"
 )
-
-//Pointer to the GORM connection pool
-var dbConnPool *gorm.DB
 
 func IsAlive() {
 	fmt.Println("Hello World")
@@ -28,13 +22,7 @@ func InitAPIServer() {
 	//Initialize database context for "geo" schema
 	print("Initializing database context for schema geo ....")
 
-	geoDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   "geo.",
-			SingularTable: true,
-		},
-	})
-
+	geoDB, err := handlers.ConfigDBConnection(dsn, "geo")
 	handlers.GenericErrorHandler(err, "Cannot Connect to DB")
 
 	print("Database Connection Pool Initialized")
@@ -42,58 +30,8 @@ func InitAPIServer() {
 	app := fiber.New()
 	api := app.Group("/MikeDelta/api")
 
-	//Create routing group and routes for Geographic information
-	geo_group := api.Group("/Geographic")
-
-	geo_group.Get("/GetAllCountries", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetAllCountries(geoDB)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Get("/GetCountryForId", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetCountryForId(geoDB, c)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Post("/CreateCountry", func(c *fiber.Ctx) error {
-		svcResult := geoservice.CreateCountry(geoDB, string(c.Request().Body()))
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Delete("/DeleteCountry", func(c *fiber.Ctx) error {
-		svcResult := geoservice.DeleteCountry(geoDB, c)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Put("/UpdateCountry", func(c *fiber.Ctx) error {
-		svcResult := geoservice.UpdateCountry(geoDB, string(c.Request().Body()))
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Get("/GetAllStatesForCountryId", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetAllCountries(geoDB)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Get("/GetStateForId", func(c *fiber.Ctx) error {
-		svcResult := geoservice.GetCountryForId(geoDB, c)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Post("/CreateState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.CreateCountry(geoDB, string(c.Request().Body()))
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Delete("/DeleteState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.DeleteCountry(geoDB, c)
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
-
-	geo_group.Put("/UpdateState", func(c *fiber.Ctx) error {
-		svcResult := geoservice.UpdateCountry(geoDB, string(c.Request().Body()))
-		return handlers.GenericSvcResultHandler(svcResult, c)
-	})
+	georoute.SetCountryRouting(api, geoDB, "/Geographic")
+	georoute.SetStateRouting(api, geoDB, "/Geographic")
 
 	app.Listen(":3000")
 }
