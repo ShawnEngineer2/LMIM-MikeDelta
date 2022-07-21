@@ -10,7 +10,7 @@ import (
 
 func SetStateRouting(rtr fiber.Router, db *gorm.DB) fiber.Router {
 
-	rtr.Get("/GetAllStatesForCountryId", func(c *fiber.Ctx) error {
+	rtr.Get("/GetAllStatesForId", func(c *fiber.Ctx) error {
 		svcResult := geoservice.GetAllStatesForCountryId(db, c)
 		return handlers.GenericSvcResultHandler(svcResult, c)
 	})

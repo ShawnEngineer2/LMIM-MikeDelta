@@ -33,6 +33,7 @@ func InitAPIServer() {
 
 	georoute.SetCountryRouting(geo_group, geoDB)
 	georoute.SetStateRouting(geo_group, geoDB)
+	georoute.SetCityRouting(geo_group, geoDB)
 
 	app.Listen(":3000")
 }

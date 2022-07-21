@@ -1,7 +1,7 @@
 package geo
 
 type City struct {
-	Geocityid     uint32
+	Geocityid     uint32 `gorm:"autoincrement"`
 	Cityid        uint32
 	Stateid       uint32
 	Countryid     uint32
