@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 
 	"lemonde.mikedelta/server/handlers"
-	"lemonde.mikedelta/server/services/geoservice"
+	geoservice "lemonde.mikedelta/server/services/geo"
 )
 
 func SetStateRouting(rtr fiber.Router, db *gorm.DB) fiber.Router {

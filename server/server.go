@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"lemonde.mikedelta/server/handlers"
+	custroute "lemonde.mikedelta/server/routing/customer"
 	georoute "lemonde.mikedelta/server/routing/geo"
 )
 
@@ -22,8 +23,11 @@ func InitAPIServer() {
 	//Initialize database context for "geo" schema
 	print("Initializing database context for schema geo ....")
 
-	geoDB, err := handlers.ConfigDBConnection(dsn, "geo")
-	handlers.GenericErrorHandler(err, "Cannot Connect to DB")
+	geoDB, geoErr := handlers.ConfigDBConnection(dsn, "geo")
+	handlers.GenericErrorHandler(geoErr, "Cannot Connect to schema")
+
+	custDB, custErr := handlers.ConfigDBConnection(dsn, "customer")
+	handlers.GenericErrorHandler(custErr, "Cannot Connect to schema")
 
 	print("Database Connection Pool Initialized")
 
@@ -34,6 +38,9 @@ func InitAPIServer() {
 	georoute.SetCountryRouting(geo_group, geoDB)
 	georoute.SetStateRouting(geo_group, geoDB)
 	georoute.SetCityRouting(geo_group, geoDB)
+
+	cust_group := api.Group("/Customer")
+	custroute.SetCustTypeRouting(cust_group, custDB)
 
 	app.Listen(":3000")
 }

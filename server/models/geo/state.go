@@ -1,9 +1,9 @@
 package geo
 
 type State struct {
-	Geostateid     uint32 `gorm:"autoIncrement"`
-	Stateid        uint32
+	Recid          uint32 `gorm:"autoIncrement"`
 	Countryid      uint32
+	Stateid        uint32
 	Statename      string
 	Statecode      string
 	Statetype      string

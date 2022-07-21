@@ -1,7 +1,7 @@
 package geo
 
 type Country struct {
-	Geocountryid   uint32 `gorm:"autoIncrement"`
+	Recid          uint32 `gorm:"autoIncrement"`
 	Countryid      uint32
 	Countryname    string
 	Iso3           string
