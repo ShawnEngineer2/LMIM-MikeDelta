@@ -11,20 +11,14 @@ import (
 
 	"gorm.io/gorm"
 
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllStatesForCountryId(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmName := "countryid"
-	countryId, _ := strconv.Atoi(c.Query(parmName, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmName)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := []geo.State{}
@@ -48,20 +42,14 @@ func GetAllStatesForCountryId(db *gorm.DB, c *fiber.Ctx) string {
 
 func GetStateForCountryStateId(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmNameCountry := "countryid"
-	parmNameState := "stateid"
-
-	countryId, _ := strconv.Atoi(c.Query(parmNameCountry, "-1"))
-	stateId, _ := strconv.Atoi(c.Query(parmNameState, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCountry)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if stateId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameState)
+	stateId, parmStatus := handlers.ParameterCheck(c, "stateid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.State{}
@@ -110,20 +98,14 @@ func CreateState(db *gorm.DB, inputData string) string {
 
 func DeleteState(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmNameCountry := "countryid"
-	parmNameState := "stateid"
-
-	countryId, _ := strconv.Atoi(c.Query(parmNameCountry, "-1"))
-	stateId, _ := strconv.Atoi(c.Query(parmNameState, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCountry)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if stateId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameState)
+	stateId, parmStatus := handlers.ParameterCheck(c, "stateid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.State{}

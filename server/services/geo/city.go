@@ -11,26 +11,19 @@ import (
 
 	"gorm.io/gorm"
 
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllCitiesForCountryStateId(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmNameCountry := "countryid"
-	parmNameState := "stateid"
-	countryId, _ := strconv.Atoi(c.Query(parmNameCountry, "-1"))
-	stateId, _ := strconv.Atoi(c.Query(parmNameState, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCountry)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if stateId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameState)
+	stateId, parmStatus := handlers.ParameterCheck(c, "stateid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := []geo.City{}
@@ -54,26 +47,19 @@ func GetAllCitiesForCountryStateId(db *gorm.DB, c *fiber.Ctx) string {
 
 func GetCityForCountryStateCityId(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmNameCountry := "countryid"
-	parmNameState := "stateid"
-	parmNameCity := "cityid"
-
-	countryId, _ := strconv.Atoi(c.Query(parmNameCountry, "-1"))
-	stateId, _ := strconv.Atoi(c.Query(parmNameState, "-1"))
-	cityId, _ := strconv.Atoi(c.Query(parmNameCity, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCountry)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if stateId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameState)
+	stateId, parmStatus := handlers.ParameterCheck(c, "stateid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if cityId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCity)
+	cityId, parmStatus := handlers.ParameterCheck(c, "cityid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.City{}
@@ -120,26 +106,19 @@ func CreateCity(db *gorm.DB, inputData string) string {
 
 func DeleteCity(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmNameCountry := "countryid"
-	parmNameState := "stateid"
-	parmNameCity := "cityid"
-
-	countryId, _ := strconv.Atoi(c.Query(parmNameCountry, "-1"))
-	stateId, _ := strconv.Atoi(c.Query(parmNameState, "-1"))
-	cityId, _ := strconv.Atoi(c.Query(parmNameCity, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCountry)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if stateId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameState)
+	stateId, parmStatus := handlers.ParameterCheck(c, "stateid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
-	if cityId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmNameCity)
+	cityId, parmStatus := handlers.ParameterCheck(c, "cityid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.City{}

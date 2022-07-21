@@ -11,8 +11,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -38,13 +36,9 @@ func GetAllCountries(db *gorm.DB) string {
 
 func GetCountryForId(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmName := "countryid"
-	countryId, _ := strconv.Atoi(c.Query(parmName, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmName)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.Country{}
@@ -91,13 +85,9 @@ func CreateCountry(db *gorm.DB, inputData string) string {
 
 func DeleteCountry(db *gorm.DB, c *fiber.Ctx) string {
 
-	parmName := "countryid"
-	countryId, _ := strconv.Atoi(c.Query(parmName, "-1"))
-
-	//Validate input, Get a model instance, and delete
-	//---------------------------------------------------------------
-	if countryId == -1 {
-		return fmt.Sprintf("Parameter Not Found: %s", parmName)
+	countryId, parmStatus := handlers.ParameterCheck(c, "countryid")
+	if len(parmStatus) > 0 {
+		return parmStatus
 	}
 
 	reqModel := geo.Country{}
